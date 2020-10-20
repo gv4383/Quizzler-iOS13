@@ -28,12 +28,12 @@ class ViewController: UIViewController {
         Question(q: "No piece of square dry paper can be folded in half more than 7 times.", a: "False"),
         Question(q: "Chocolate affects a dog's heart and nervous system; a few ounces are enough to kill a small dog.", a: "True")
     ]
-    
     var questionNumber = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        progressBar.progress = 1.0 / Float(quiz.count)
         questionLabel.text = quiz[questionNumber].text
     }
     
@@ -42,21 +42,25 @@ class ViewController: UIViewController {
         let actualAnswer = quiz[questionNumber].answer
         
         if (userAnswer == actualAnswer) {
-            print("Right!")
+            sender.backgroundColor = UIColor.green
         } else {
-            print("Wrong!")
+            sender.backgroundColor = UIColor.red
         }
         
         if (questionNumber + 1 < quiz.count) {
             questionNumber += 1
-            updateUI()
         } else {
             questionNumber = 0
         }
+        
+        Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(updateUI), userInfo: nil, repeats: false)
     }
     
-    func updateUI() {
+    @objc func updateUI() {
         questionLabel.text = quiz[questionNumber].text
+        trueButton.backgroundColor = UIColor.clear
+        falseButton.backgroundColor = UIColor.clear
+        progressBar.progress = Float(questionNumber + 1) / Float(quiz.count)
     }
 }
 
